@@ -1,2 +1,0 @@
-# chilinchiou
-Blog repo.
