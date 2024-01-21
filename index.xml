@@ -6,11 +6,11 @@
     <description>Recent content on Meow</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 16 Apr 2023 14:05:37 +0800</lastBuildDate><atom:link href="http://www.example.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 21 Jan 2024 14:05:37 +0800</lastBuildDate><atom:link href="http://www.example.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Python Decorator</title>
       <link>http://www.example.com/posts/python_decorator/</link>
-      <pubDate>Sun, 16 Apr 2023 14:05:37 +0800</pubDate>
+      <pubDate>Sun, 21 Jan 2024 14:05:37 +0800</pubDate>
       
       <guid>http://www.example.com/posts/python_decorator/</guid>
       <description>簡介 Link to heading 根據 PEP3181，Python 中的 Decorator 與 GOF 中的 Decorator 不同 起源 Link to heading 過去常使用到 python 中的 @，但似乎沒深入了解過 how it works 常在 pytest 傳入多筆 testcase，底下範例取自 Parametrizing fixtures and test functions: import pytest @pytest.mark.parametrize( &amp;#34;test_input,expected&amp;#34;, [(&amp;#34;3+5&amp;#34;, 8), (&amp;#34;2+4&amp;#34;, 6), (&amp;#34;6*9&amp;#34;, 42)] ) def test_eval(test_input, expected): assert eval(test_input) == expected 近期在應付學校課業時發現後端認證 token 時有更佳寫法，取自 Day08:08 - User服務(3) - 後端 - JWT token、修改個人資料: import jwt from users.models import User from tools.</description>
