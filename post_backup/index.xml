@@ -1,41 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Meow</title>
-    <link>http://www.example.com/</link>
-    <description>Recent content on Meow</description>
+    <title>Post_backups on Meow</title>
+    <link>http://www.example.com/post_backup/</link>
+    <description>Recent content in Post_backups on Meow</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 16 Apr 2023 14:05:37 +0800</lastBuildDate><atom:link href="http://www.example.com/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Python Decorator</title>
-      <link>http://www.example.com/posts/python_decorator/</link>
-      <pubDate>Sun, 16 Apr 2023 14:05:37 +0800</pubDate>
-      
-      <guid>http://www.example.com/posts/python_decorator/</guid>
-      <description>簡介 Link to heading 根據 PEP3181，Python 中的 Decorator 與 GOF 中的 Decorator 不同 起源 Link to heading 過去常使用到 python 中的 @，但似乎沒深入了解過 how it works 常在 pytest 傳入多筆 testcase，底下範例取自 Parametrizing fixtures and test functions: import pytest @pytest.mark.parametrize( &amp;#34;test_input,expected&amp;#34;, [(&amp;#34;3+5&amp;#34;, 8), (&amp;#34;2+4&amp;#34;, 6), (&amp;#34;6*9&amp;#34;, 42)] ) def test_eval(test_input, expected): assert eval(test_input) == expected 近期在應付學校課業時發現後端認證 token 時有更佳寫法，取自 Day08:08 - User服務(3) - 後端 - JWT token、修改個人資料: import jwt from users.models import User from tools.</description>
-    </item>
-    
-    <item>
-      <title>2024 notes</title>
-      <link>http://www.example.com/posts/2024/</link>
-      <pubDate>Sun, 09 Apr 2023 14:55:35 +0800</pubDate>
-      
-      <guid>http://www.example.com/posts/2024/</guid>
-      <description> 2023-01-18 半夜逛了 Twitter 讀了不少人對於 2023 的回顧與 2024 的規劃 https://mp.weixin.qq.com/s?__biz=MjM5NjI4MjM0Mw==&amp;mid=2652166294&amp;idx=1&amp;sn=475bf1b82f7f9943837b67bec399c5cd&amp;chksm=bd0bd21e8a7c5b084b576103690074bebfe1a96cfbdc5d7370ba727782cbbc8001bb2e84fe41&amp;token=241587091&amp;lang=zh_CN#rd https://twitter.com/fkysly/status/1746784846943601028 https://lutaonan.com/blog/say-in-28/ 希望自己花時間把獨立開發週刊閱讀一下 https://www.ezindie.com/weekly </description>
-    </item>
-    
-    <item>
-      <title>Hello world, Again!</title>
-      <link>http://www.example.com/posts/first/</link>
-      <pubDate>Sun, 09 Apr 2023 14:55:35 +0800</pubDate>
-      
-      <guid>http://www.example.com/posts/first/</guid>
-      <description> Hello world, Again! Link to heading 第三次回歸 blog， 先記錄一下 Hugo 一些語法。
-New post Link to heading $ hugo new posts/first.md Deploy Link to heading generate static page
-$ hugo -D </description>
-    </item>
-    
+    <lastBuildDate>Mon, 25 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://www.example.com/post_backup/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Mermaid JS support</title>
       <link>http://www.example.com/post_backup/mermaid-support/</link>
@@ -119,33 +90,6 @@ Hello Hello World! Goodbye Goodbye Everybody! Right alighment Link to heading Yo
       
       <guid>http://www.example.com/post_backup/hugo-coder-wiki/</guid>
       <description></description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>http://www.example.com/about/</link>
-      <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
-      
-      <guid>http://www.example.com/about/</guid>
-      <description>喝無糖的臺南人。</description>
-    </item>
-    
-    <item>
-      <title>Contact</title>
-      <link>http://www.example.com/contact/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://www.example.com/contact/</guid>
-      <description>Follow me, @johndoe.</description>
-    </item>
-    
-    <item>
-      <title>Projects</title>
-      <link>http://www.example.com/projects/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://www.example.com/projects/</guid>
-      <description>Nothing to see here&amp;hellip; Move along!</description>
     </item>
     
   </channel>
