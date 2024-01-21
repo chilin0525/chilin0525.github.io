@@ -16,14 +16,5 @@
       <description></description>
     </item>
     
-    <item>
-      <title>Life</title>
-      <link>http://www.example.com/tags/life/</link>
-      <pubDate>Sun, 09 Apr 2023 14:55:35 +0800</pubDate>
-      
-      <guid>http://www.example.com/tags/life/</guid>
-      <description></description>
-    </item>
-    
   </channel>
 </rss>

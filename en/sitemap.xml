@@ -2,6 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://www.example.com/posts/2024/</loc>
+    <lastmod>2024-01-21T16:29:07+08:00</lastmod>
+  </url><url>
+    <loc>http://www.example.com/</loc>
+    <lastmod>2024-01-21T16:29:07+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt-br"
+                href="http://www.example.com/pt-br/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://www.example.com/"
+                />
+  </url><url>
+    <loc>http://www.example.com/posts/</loc>
+    <lastmod>2024-01-21T16:29:07+08:00</lastmod>
+  </url><url>
     <loc>http://www.example.com/authors/</loc>
     <lastmod>2024-01-21T14:05:37+08:00</lastmod>
     <xhtml:link
@@ -16,22 +35,6 @@
                 />
   </url><url>
     <loc>http://www.example.com/authors/chilin-chiou/</loc>
-    <lastmod>2024-01-21T14:05:37+08:00</lastmod>
-  </url><url>
-    <loc>http://www.example.com/</loc>
-    <lastmod>2024-01-21T14:05:37+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="pt-br"
-                href="http://www.example.com/pt-br/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://www.example.com/"
-                />
-  </url><url>
-    <loc>http://www.example.com/posts/</loc>
     <lastmod>2024-01-21T14:05:37+08:00</lastmod>
   </url><url>
     <loc>http://www.example.com/tags/python/</loc>
@@ -53,13 +56,7 @@
                 href="http://www.example.com/tags/"
                 />
   </url><url>
-    <loc>http://www.example.com/posts/2024/</loc>
-    <lastmod>2023-04-09T14:55:35+08:00</lastmod>
-  </url><url>
     <loc>http://www.example.com/posts/first/</loc>
-    <lastmod>2023-04-09T14:55:35+08:00</lastmod>
-  </url><url>
-    <loc>http://www.example.com/tags/life/</loc>
     <lastmod>2023-04-09T14:55:35+08:00</lastmod>
   </url><url>
     <loc>http://www.example.com/authors/hugo-authors/</loc>
