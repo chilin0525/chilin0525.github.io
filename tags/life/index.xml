@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Life on Meow</title>
+    <link>http://www.example.com/tags/life/</link>
+    <description>Recent content in Life on Meow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 09 Apr 2023 14:55:35 +0800</lastBuildDate><atom:link href="http://www.example.com/tags/life/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2024 notes</title>
+      <link>http://www.example.com/posts/2024/</link>
+      <pubDate>Sun, 09 Apr 2023 14:55:35 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/2024/</guid>
+      <description> 2023-01-18 半夜逛了 Twitter 讀了不少人對於 2023 的回顧與 2024 的規劃 https://mp.weixin.qq.com/s?__biz=MjM5NjI4MjM0Mw==&amp;mid=2652166294&amp;idx=1&amp;sn=475bf1b82f7f9943837b67bec399c5cd&amp;chksm=bd0bd21e8a7c5b084b576103690074bebfe1a96cfbdc5d7370ba727782cbbc8001bb2e84fe41&amp;token=241587091&amp;lang=zh_CN#rd https://twitter.com/fkysly/status/1746784846943601028 https://lutaonan.com/blog/say-in-28/ 希望自己花時間把獨立開發週刊閱讀一下 https://www.ezindie.com/weekly </description>
+    </item>
+    
+  </channel>
+</rss>
