@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Raft · Meow
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Chilin Chiou">
+<meta name="description" content="[toc]
+Raft Link to heading 近期要準備分散式系統期末報告，要選定三篇 production 的論文，但這些的前提是要先打倒一直聽過，但從來沒接觸過的大魔王 - Raft 演算法
+Production use of Raft CockroachDB Etcd RabbitMQ TiDB ZooKeeper Kafka Terminalogy Link to heading 有許多名詞可能會讓人產生 ambiguous，底下列出此篇文章會提到的重點
+log: Raft basic Link to heading station machine Link to heading Raft 將集群中的節點分為三種狀態的角色，每個節點只會處於下列三種狀態其中之一(光是這點，相比 Paxos 就容易了不少):
+Leader: 正常情況集群只有一個 Leader Follower: 非選舉期間，Leader 以外的狀態 被動，不會主動發出 request，負責回應 Leader 與 Candidate 的 request 節點預設狀態，如果沒有察覺到 Leader 會切換到 candidate 狀態，根據一次或是多次的選舉後，最終可能變成 Leader 或是持續 Follower 狀態 Candidatae: 特殊狀態，選舉新的 Leader 才會使用到 並以 Station machine 來描述變化:">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Raft"/>
+<meta name="twitter:description" content="[toc]
+Raft Link to heading 近期要準備分散式系統期末報告，要選定三篇 production 的論文，但這些的前提是要先打倒一直聽過，但從來沒接觸過的大魔王 - Raft 演算法
+Production use of Raft CockroachDB Etcd RabbitMQ TiDB ZooKeeper Kafka Terminalogy Link to heading 有許多名詞可能會讓人產生 ambiguous，底下列出此篇文章會提到的重點
+log: Raft basic Link to heading station machine Link to heading Raft 將集群中的節點分為三種狀態的角色，每個節點只會處於下列三種狀態其中之一(光是這點，相比 Paxos 就容易了不少):
+Leader: 正常情況集群只有一個 Leader Follower: 非選舉期間，Leader 以外的狀態 被動，不會主動發出 request，負責回應 Leader 與 Candidate 的 request 節點預設狀態，如果沒有察覺到 Leader 會切換到 candidate 狀態，根據一次或是多次的選舉後，最終可能變成 Leader 或是持續 Follower 狀態 Candidatae: 特殊狀態，選舉新的 Leader 才會使用到 並以 Station machine 來描述變化:"/>
+
+<meta property="og:title" content="Raft" />
+<meta property="og:description" content="[toc]
+Raft Link to heading 近期要準備分散式系統期末報告，要選定三篇 production 的論文，但這些的前提是要先打倒一直聽過，但從來沒接觸過的大魔王 - Raft 演算法
+Production use of Raft CockroachDB Etcd RabbitMQ TiDB ZooKeeper Kafka Terminalogy Link to heading 有許多名詞可能會讓人產生 ambiguous，底下列出此篇文章會提到的重點
+log: Raft basic Link to heading station machine Link to heading Raft 將集群中的節點分為三種狀態的角色，每個節點只會處於下列三種狀態其中之一(光是這點，相比 Paxos 就容易了不少):
+Leader: 正常情況集群只有一個 Leader Follower: 非選舉期間，Leader 以外的狀態 被動，不會主動發出 request，負責回應 Leader 與 Candidate 的 request 節點預設狀態，如果沒有察覺到 Leader 會切換到 candidate 狀態，根據一次或是多次的選舉後，最終可能變成 Leader 或是持續 Follower 狀態 Candidatae: 特殊狀態，選舉新的 Leader 才會使用到 並以 Station machine 來描述變化:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://www.example.com/posts/raft/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-04-10T12:54:23+08:00" />
+<meta property="article:modified_time" content="2024-04-10T12:54:23+08:00" />
+
+
+
+
+
+<link rel="canonical" href="http://www.example.com/posts/raft/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.65236a6d834b26194eed04a2a3b45e44d9194ef9e620253705d4bef03bd7ef81.css" integrity="sha256-ZSNqbYNLJhlO7QSio7ReRNkZTvnmICU3BdS&#43;8DvX74E=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.f6534b0b446b75d9b6ad77a97d43ede2ddaeff1b6e2361fb7198d6f8fcb7f83f.css" integrity="sha256-9lNLC0Rrddm2rXepfUPt4t2u/xtuI2H7cZjW&#43;Py3&#43;D8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-dark">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Meow
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/contact/">Contact me</a>
+            </li>
+          
+        
+        
+          
+          
+          
+            
+          
+            
+              
+                <li class="navigation-item menu-separator">
+                  <span>|</span>
+                </li>
+                
+              
+              <li class="navigation-item">
+                <a href="/pt-br/">🇧🇷</a>
+              </li>
+            
+          
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://www.example.com/posts/raft/">
+              Raft
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-04-10T12:54:23&#43;08:00">
+                April 10, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>[toc]</p>
+<h1 id="raft">
+  Raft
+  <a class="heading-link" href="#raft">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>近期要準備分散式系統期末報告，要選定三篇 production 的論文，但這些的前提是要先打倒一直聽過，但從來沒接觸過的大魔王 - Raft 演算法</p>
+<ul>
+<li>Production use of Raft
+<ul>
+<li>CockroachDB</li>
+<li>Etcd</li>
+<li>RabbitMQ</li>
+<li>TiDB</li>
+<li>ZooKeeper</li>
+<li>Kafka</li>
+</ul>
+</li>
+</ul>
+<h2 id="terminalogy">
+  Terminalogy
+  <a class="heading-link" href="#terminalogy">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>有許多名詞可能會讓人產生 ambiguous，底下列出此篇文章會提到的重點</p>
+<ul>
+<li>log:</li>
+</ul>
+<h2 id="raft-basic">
+  Raft basic
+  <a class="heading-link" href="#raft-basic">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<h3 id="station-machine">
+  station machine
+  <a class="heading-link" href="#station-machine">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Raft 將集群中的節點分為三種狀態的角色，<strong>每個節點只會處於下列三種狀態其中之一</strong>(光是這點，相比 Paxos 就容易了不少):</p>
+<ul>
+<li>Leader:
+<ul>
+<li>正常情況集群只有一個 Leader</li>
+</ul>
+</li>
+<li>Follower:
+<ul>
+<li>非選舉期間，Leader 以外的狀態</li>
+<li>被動，不會主動發出 request，負責回應 Leader 與 Candidate 的 request</li>
+<li>節點預設狀態，如果沒有察覺到 Leader 會切換到 candidate 狀態，根據一次或是多次的選舉後，最終可能變成 Leader 或是持續 Follower 狀態</li>
+</ul>
+</li>
+<li>Candidatae:
+<ul>
+<li>特殊狀態，選舉新的 Leader 才會使用到</li>
+</ul>
+</li>
+</ul>
+<p>並以 Station machine 來描述變化:</p>
+<ul>
+<li>正常情況下，除非發生故障，否則當前 Leader 會繼續就任</li>
+</ul>
+<p><img src="../../static/images/raft_role.png" alt="raft_role"></p>
+<p>raft 內部以兩種主要的 RPC 進行溝通:</p>
+<ul>
+<li>RequestVote RPC: 由 candidate 在選舉期間發起</li>
+<li>AppendEntries RPC: 由 leader 發起，用來 replica log 與提供心跳</li>
+<li>節點溝通時是交換當前的任期版本號，如果 node 上當前節點的版本號比其他小，會更新自己的任期版本號</li>
+<li>如果一個 leader 或是 candidate 發現自己任期的版本號過期了，會立即變為 follower</li>
+<li>如果一個節點接收到包含過期的任期版本號 request，會拒絕這個 request</li>
+</ul>
+<h3 id="term-任期">
+  Term (任期)
+  <a class="heading-link" href="#term-%e4%bb%bb%e6%9c%9f">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Raft 把時間切分任一長度的任期(term)，或者反過來說，將多個任期組成一連續時間，在選舉期間如果發生同票等情況無法順利選出 Leader，則等到下個任期到來，下一輪的選舉就會開始，<strong>Raft 保證，任一個任期內，只有一個 Leader</strong></p>
+<p>TODO: how to 保證 不會長期是無 leader 狀態</p>
+<h2 id="leader-election">
+  Leader election
+  <a class="heading-link" href="#leader-election">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>上面挖了一些坑，例如:</p>
+<ul>
+<li>如何保證任何時刻只有一個 leader</li>
+<li>leader 失效的處理方法</li>
+</ul>
+<h3 id="heartbeats-and-timeouts">
+  Heartbeats and Timeouts
+  <a class="heading-link" href="#heartbeats-and-timeouts">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<ul>
+<li>Raft 內部有 heartbeat，如果 leader 存活，他應當定期地向所有 follower 發送 heartbeat (<code>Heartbeats (empty AppendEntries RPC)</code>)，因此如果 follower 一段時間沒有收到 heartbeat，即認為系統中沒有可用的 leader 而進行選舉</li>
+<li>當 follower 偵測到系統中沒有 leader 後
+<ul>
+<li>先將自己當前的 term index 增加</li>
+<li>切換至 candidate 狀態</li>
+<li>投票給自己</li>
+<li>發出 <code>RequestVote RPCs</code> 請其他節點投票</li>
+</ul>
+</li>
+<li>follower 投票原則
+<ul>
+<li>只有一張選票</li>
+<li>FIFO: 先來先得</li>
+</ul>
+</li>
+<li>最終選舉結果:
+<ul>
+<li>獲得半數投票贏得選舉，該 candidate 成為 leader 並開始發送 <code>Heartbeats (empty AppendEntries RPC)</code></li>
+<li>其他節點贏得選舉成為 leader，因此 candidate 會收到新 leader 發送的 <code>Heartbeats (empty AppendEntries RPC)</code>，如果確認新 leader 的 term index 不小於自己當前的 term index (其他節點成為 candidate 的過程會相同，因此理論上會收到相同的 index)，就從 candidate 退化到 follower 狀態</li>
+<li>沒有人贏得選舉
+<ul>
+<li>論文中提出隨機選舉 timeout 為 150-300ms，即如果 canidate 既沒有成為 leader 也沒有成為 follower，從 150-300ms 間隨機選擇一個時間再次發起選舉</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="is-raft-always-the-best-solutions">
+  Is Raft always the best solutions?
+  <a class="heading-link" href="#is-raft-always-the-best-solutions">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>No! 作為一個系統設計者與軟體開發者，永遠以需求角度思考解決方案與架構設計</p>
+<p>以去年(2023) 年從單節點版本擴增到多節點的 IoTDB 為例，考量過後他們決定手刻自己的一致性演算法，底下為引用自 IoTDB 作者在個人 blog 中的原文 (<a href="https://blog.csdn.net/qiaojialin/article/details/128359156?spm=1001.2014.3001.5501"  class="external-link" target="_blank" rel="noopener">历时一年，我们把 IoTDB 分布式献给你</a>):</p>
+<blockquote>
+<p>现在一提到共识协议，大家都能想到 Paxos 和 Raft，这两类在任何场景能保证数据强一致性。但是这类协议是否过于重了？</p>
+<p>物联网场景的写写冲突远没有互联网场景频繁，甚至可以说，大部分场景几乎没有，由于我们数据的主键是时间序列+时间戳，可以说一条数据，从一个设备产生到入库，基本不可能有同一主键不同值的数据从另一套链路进到数据库，去和它产生冲突。</p>
+<p>没有物物冲突，就只剩人物冲突了，只有人会去修改数据，但前提也是发现数据存在偏差采取修改删除，要能先看到数据。在此前提下，我们设计了 IoTConsensus 协议，来提供更高的数据入库效率。同时，为了支持元数据和系统数据的强一致，我们也支持 Raft 协议，并且支持单副本空协议 SimpleConsensus。</p>
+</blockquote>
+<h2 id="reference">
+  Reference
+  <a class="heading-link" href="#reference">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li><a href="https://arthurchiao.art/blog/raft-paper-zh/"  class="external-link" target="_blank" rel="noopener">[译] [论文] Raft 共识算法（及 etcd/raft 源码解析）（USENIX, 2014）</a></li>
+</ul>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2023 -
+    
+    2024
+     Chilin Chiou 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  <script data-goatcounter="https://code.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

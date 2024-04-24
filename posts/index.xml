@@ -6,7 +6,39 @@
     <description>Recent content in Posts on Meow</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 31 Jan 2024 23:35:33 +0800</lastBuildDate><atom:link href="http://www.example.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 24 Apr 2024 15:53:15 +0800</lastBuildDate><atom:link href="http://www.example.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>http://www.example.com/posts/cassandra/</link>
+      <pubDate>Wed, 24 Apr 2024 15:53:15 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/cassandra/</guid>
+      <description>reference Link to heading https://tachunwu.github.io/posts/discord-cassandra/</description>
+    </item>
+    
+    <item>
+      <title>Dynamo: Amazon&#39;s Highly Available Key-value Store（SOSP 2007）</title>
+      <link>http://www.example.com/posts/dynamo/</link>
+      <pubDate>Wed, 24 Apr 2024 15:48:44 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/dynamo/</guid>
+      <description>abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案:
+load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming and configuration management 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent system interface Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partitioning algorithm * replication 為達到高可用性與資料的持久性，Dynamo 會將資料複製到 N 個節點上(N 為設定值)</description>
+    </item>
+    
+    <item>
+      <title>Raft</title>
+      <link>http://www.example.com/posts/raft/</link>
+      <pubDate>Wed, 10 Apr 2024 12:54:23 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/raft/</guid>
+      <description>[toc]
+Raft Link to heading 近期要準備分散式系統期末報告，要選定三篇 production 的論文，但這些的前提是要先打倒一直聽過，但從來沒接觸過的大魔王 - Raft 演算法
+Production use of Raft CockroachDB Etcd RabbitMQ TiDB ZooKeeper Kafka Terminalogy Link to heading 有許多名詞可能會讓人產生 ambiguous，底下列出此篇文章會提到的重點
+log: Raft basic Link to heading station machine Link to heading Raft 將集群中的節點分為三種狀態的角色，每個節點只會處於下列三種狀態其中之一(光是這點，相比 Paxos 就容易了不少):
+Leader: 正常情況集群只有一個 Leader Follower: 非選舉期間，Leader 以外的狀態 被動，不會主動發出 request，負責回應 Leader 與 Candidate 的 request 節點預設狀態，如果沒有察覺到 Leader 會切換到 candidate 狀態，根據一次或是多次的選舉後，最終可能變成 Leader 或是持續 Follower 狀態 Candidatae: 特殊狀態，選舉新的 Leader 才會使用到 並以 Station machine 來描述變化:</description>
+    </item>
+    
     <item>
       <title>ChangeFormer</title>
       <link>http://www.example.com/posts/changeformer/</link>
@@ -44,6 +76,15 @@
       <description> Hello world, Again! Link to heading 第三次回歸 blog， 先記錄一下 Hugo 一些語法。
 New post Link to heading $ hugo new posts/first.md Deploy Link to heading generate static page
 $ hugo -D </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://www.example.com/posts/k8s/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/posts/k8s/</guid>
+      <description></description>
     </item>
     
   </channel>
