@@ -13,18 +13,15 @@
 
 
 <meta name="author" content="Chilin Chiou">
-<meta name="description" content="abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案:
-load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming and configuration management 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent system interface Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partitioning algorithm * replication 為達到高可用性與資料的持久性，Dynamo 會將資料複製到 N 個節點上(N 為設定值)">
+<meta name="description" content="abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 設計上的考量 Link to heading 如何解決 conflict 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent always writable 把解決寫入 conflict 的情況在讀取時解決 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案: load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming configuration management Dynamo 論文中只討論了下面的幾項技術 parition: 如何決定資料要存到哪個節點 replication versioning membership failure detection and failure handling scaling system architecture Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partition Link to heading 重點是如何分配資料到特定節點中 consistent hashing 已知各個節點經過 hash 後，在 ring 中有各自的位置，而要處理的 data 經過 hash 後會存在環上某位置，以順時鐘方向遇到第一個 index (節點) 就負責處理這筆資料ㄘ partitioning algorithm replication 為達到高可用性與資料的持久性，Dynamo 會將資料複製到 N 個節點上(N 為設定值)">
 <meta name="keywords" content="blog,developer,personal">
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Dynamo: Amazon&#39;s Highly Available Key-value Store（SOSP 2007）"/>
-<meta name="twitter:description" content="abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案:
-load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming and configuration management 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent system interface Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partitioning algorithm * replication 為達到高可用性與資料的持久性，Dynamo 會將資料複製到 N 個節點上(N 為設定值)"/>
+<meta name="twitter:description" content="abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 設計上的考量 Link to heading 如何解決 conflict 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent always writable 把解決寫入 conflict 的情況在讀取時解決 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案: load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming configuration management Dynamo 論文中只討論了下面的幾項技術 parition: 如何決定資料要存到哪個節點 replication versioning membership failure detection and failure handling scaling system architecture Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partition Link to heading 重點是如何分配資料到特定節點中 consistent hashing 已知各個節點經過 hash 後，在 ring 中有各自的位置，而要處理的 data 經過 hash 後會存在環上某位置，以順時鐘方向遇到第一個 index (節點) 就負責處理這筆資料ㄘ partitioning algorithm replication 為達到高可用性與資料的持久性，Dynamo 會將資料複製到 N 個節點上(N 為設定值)"/>
 
 <meta property="og:title" content="Dynamo: Amazon&#39;s Highly Available Key-value Store（SOSP 2007）" />
-<meta property="og:description" content="abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案:
-load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming and configuration management 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent system interface Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partitioning algorithm * replication 為達到高可用性與資料的持久性，Dynamo 會將資料複製到 N 個節點上(N 為設定值)" />
+<meta property="og:description" content="abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 設計上的考量 Link to heading 如何解決 conflict 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent always writable 把解決寫入 conflict 的情況在讀取時解決 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案: load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming configuration management Dynamo 論文中只討論了下面的幾項技術 parition: 如何決定資料要存到哪個節點 replication versioning membership failure detection and failure handling scaling system architecture Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partition Link to heading 重點是如何分配資料到特定節點中 consistent hashing 已知各個節點經過 hash 後，在 ring 中有各自的位置，而要處理的 data 經過 hash 後會存在環上某位置，以順時鐘方向遇到第一個 index (節點) 就負責處理這筆資料ㄘ partitioning algorithm replication 為達到高可用性與資料的持久性，Dynamo 會將資料複製到 N 個節點上(N 為設定值)" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://www.example.com/posts/dynamo/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2024-04-24T15:48:44+08:00" />
@@ -194,26 +191,15 @@ load balancing membership and failure detection failure recovery replica synchro
 <ul>
 <li>提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 <code>always-on</code> 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。</li>
 </ul>
-<h2 id="syetem-archhitecture">
-  Syetem Archhitecture
-  <a class="heading-link" href="#syetem-archhitecture">
+<h2 id="設計上的考量">
+  設計上的考量
+  <a class="heading-link" href="#%e8%a8%ad%e8%a8%88%e4%b8%8a%e7%9a%84%e8%80%83%e9%87%8f">
     <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<p>提出生產級別的 storage system 要考慮底下任務制定相關解決方案:</p>
 <ul>
-<li>load balancing</li>
-<li>membership and failure detection</li>
-<li>failure recovery</li>
-<li>replica synchronization</li>
-<li>overload handling</li>
-<li>state transfer</li>
-<li>concurrency and job scheduling</li>
-<li>request marshalling</li>
-<li>request routing</li>
-<li>system monitoring and alarming</li>
-<li>and configuration management</li>
+<li>如何解決 conflict</li>
 </ul>
 <h2 id="特性">
   特性
@@ -226,10 +212,46 @@ load balancing membership and failure detection failure recovery replica synchro
 <li>非同步複製</li>
 <li>犧牲 consistent 換 availbility</li>
 <li>保證 eventually consistent</li>
+<li>always writable</li>
+<li>把解決寫入 conflict 的情況在讀取時解決</li>
 </ul>
-<h3 id="system-interface">
-  system interface
-  <a class="heading-link" href="#system-interface">
+<h2 id="syetem-archhitecture">
+  Syetem Archhitecture
+  <a class="heading-link" href="#syetem-archhitecture">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>提出生產級別的 storage system 要考慮底下任務制定相關解決方案:
+<ul>
+<li>load balancing</li>
+<li>membership and failure detection</li>
+<li>failure recovery</li>
+<li>replica synchronization</li>
+<li>overload handling</li>
+<li>state transfer</li>
+<li>concurrency and job scheduling</li>
+<li>request marshalling</li>
+<li>request routing</li>
+<li>system monitoring and alarming</li>
+<li>configuration management</li>
+</ul>
+</li>
+<li>Dynamo 論文中只討論了下面的幾項技術
+<ul>
+<li>parition: 如何決定資料要存到哪個節點</li>
+<li>replication</li>
+<li>versioning</li>
+<li>membership</li>
+<li>failure detection and failure handling</li>
+<li>scaling</li>
+</ul>
+</li>
+</ul>
+<h3 id="system-architecture">
+  system architecture
+  <a class="heading-link" href="#system-architecture">
     <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
@@ -249,14 +271,28 @@ load balancing membership and failure detection failure recovery replica synchro
 </li>
 <li>context:
 <ul>
-<li>version of the object
-opaque to the caller</li>
+<li>version of the object</li>
+<li>opaque to the caller</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>partitioning algorithm
-*</li>
+</ul>
+<h2 id="partition">
+  partition
+  <a class="heading-link" href="#partition">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>重點是如何分配資料到特定節點中</li>
+<li>consistent hashing
+<ul>
+<li>已知各個節點經過 hash 後，在 ring 中有各自的位置，而要處理的 data 經過 hash 後會存在環上某位置，以順時鐘方向遇到第一個 index (節點) 就負責處理這筆資料ㄘ</li>
+</ul>
+</li>
+<li>partitioning algorithm</li>
 <li>replication
 <ul>
 <li>
@@ -270,7 +306,7 @@ opaque to the caller</li>
 </li>
 <li>
 <p>負責儲存特定 key 的節點稱為 perference list，然而因為環上存在虛擬節點，實際 perference list 內物理節點可能少於 N 個，因此 perference list 在選擇節點時會特地跳過一些位置，保證資料存在不同的物理節點上面</p>
-<p><img src="static/Dynamo/replication.png" alt=""></p>
+<p><img src="images/Dynamo/replication.png" alt=""></p>
 </li>
 </ul>
 </li>
@@ -334,7 +370,7 @@ opaque to the caller</li>
 </li>
 <li>
 <p>底下的案例是新增了 X 節點到 Ａ 與 B 之間，假設這個系統 N=3 的話，新節點要負責處理 <code>(F, G)</code>, <code>(G, A]</code> 與 <code>(A, x]</code> 的 key，因此原先皆在 A 後面的 B, C, D 節點要將原先負責的 key 轉移到 X 身上；反之，如果刪除節點的話，順序相反過來。</p>
-<p><img src="static/Dynamo/replica_membership.png" alt=""></p>
+<p><img src="images/Dynamo/replica_membership.png" alt=""></p>
 </li>
 </ul>
 <h2 id="summary">
@@ -349,6 +385,7 @@ opaque to the caller</li>
 <ul>
 <li>parition</li>
 <li>vector clock -&gt;</li>
+<li>Quorum -&gt; Sloppy Quorum</li>
 </ul>
 </li>
 </ul>
