@@ -6,25 +6,7 @@
     <description>Recent content in Posts on Meow</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 01 May 2024 16:33:18 +0800</lastBuildDate><atom:link href="http://www.example.com/posts/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title></title>
-      <link>http://www.example.com/posts/test/</link>
-      <pubDate>Wed, 01 May 2024 16:33:18 +0800</pubDate>
-      
-      <guid>http://www.example.com/posts/test/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Cassandra</title>
-      <link>http://www.example.com/posts/cassandra/</link>
-      <pubDate>Wed, 24 Apr 2024 15:53:15 +0800</pubDate>
-      
-      <guid>http://www.example.com/posts/cassandra/</guid>
-      <description>reference Link to heading https://tachunwu.github.io/posts/discord-cassandra/</description>
-    </item>
-    
+    <lastBuildDate>Wed, 24 Apr 2024 15:48:44 +0800</lastBuildDate><atom:link href="http://www.example.com/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Dynamo: Amazon&#39;s Highly Available Key-value Store（SOSP 2007）</title>
       <link>http://www.example.com/posts/distributed-system/dynamo/</link>
@@ -48,34 +30,6 @@ Leader: 正常情況集群只有一個 Leader Follower: 非選舉期間，Leader
     </item>
     
     <item>
-      <title>ChangeFormer</title>
-      <link>http://www.example.com/posts/changeformer/</link>
-      <pubDate>Wed, 31 Jan 2024 23:35:33 +0800</pubDate>
-      
-      <guid>http://www.example.com/posts/changeformer/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>http://www.example.com/posts/2024/</link>
-      <pubDate>Sun, 21 Jan 2024 16:29:07 +0800</pubDate>
-      
-      <guid>http://www.example.com/posts/2024/</guid>
-      <description> 2024-01-18 半夜逛了 Twitter 讀了不少人對於 2023 的回顧與 2024 的規劃 https://mp.weixin.qq.com/s?__biz=MjM5NjI4MjM0Mw==&amp;mid=2652166294&amp;idx=1&amp;sn=475bf1b82f7f9943837b67bec399c5cd&amp;chksm=bd0bd21e8a7c5b084b576103690074bebfe1a96cfbdc5d7370ba727782cbbc8001bb2e84fe41&amp;token=241587091&amp;lang=zh_CN#rd https://twitter.com/fkysly/status/1746784846943601028 https://lutaonan.com/blog/say-in-28/ 希望自己花時間把獨立開發週刊閱讀一下 https://www.ezindie.com/weekly 2024-01-21 https://podcasters.spotify.com/pod/show/rusttalk/episodes/009-e2davbk 2024-01-31 可以考慮讀個 https://www.amazon.com/Philosophy-Software-Design-John-Ousterhout/dp/1732102201 https://go7hic.github.io/A-Philosophy-of-Software-Design/#/ https://epubkit.app/blog/paul-graham-2016-2023 2024-03-11 我後來把做音樂這件事情分成幾個層次，你喜歡音樂跟創造音樂是你跟音樂的關係，如果今天沒有觀眾你還會想要做音樂的話，那就是成為藝術家的過程，但是如果我們喜歡音樂是因為我們需要觀眾，我才做做音樂的話，那我就屬於一個專業人士或是一個在音樂產業界工作的人，後來我發現，我需要成為藝術家，這是我自己負的責任。如果有一天我沒辦法辦法表演，例如我的手沒辦法改善或是沒有人聽的話，我還會想要做音樂嗎？我會發現，我會想做音樂，我需要做音樂，我跟觀眾是我跟觀眾的關係，但我跟音樂的關係是我跟音樂的關係 大象體操＠這又沒有很ㄉ
-2024-03-17 (日) 今天在公司標記資料，對於邊做這種高重複性的工作最好找個音樂 or podcast，據說這有助於提高生產力 一開始在 代碼之外 听众来信 #8 995 没有自己的时间，如何调整？ 聽到三位主持人推薦 前阿里CEO卫哲：趁年轻去印一张自己人生的股票｜S6E34 硅谷徐老师 </description>
-    </item>
-    
-    <item>
-      <title>Python Decorator</title>
-      <link>http://www.example.com/posts/python_decorator/</link>
-      <pubDate>Sun, 21 Jan 2024 14:05:37 +0800</pubDate>
-      
-      <guid>http://www.example.com/posts/python_decorator/</guid>
-      <description>簡介 Link to heading 根據 PEP3181，Python 中的 Decorator 與 GOF 中的 Decorator 不同 起源 Link to heading 過去常使用到 python 中的 @，但似乎沒深入了解過 how it works 常在 pytest 傳入多筆 testcase，底下範例取自 Parametrizing fixtures and test functions: import pytest @pytest.mark.parametrize( &amp;#34;test_input,expected&amp;#34;, [(&amp;#34;3+5&amp;#34;, 8), (&amp;#34;2+4&amp;#34;, 6), (&amp;#34;6*9&amp;#34;, 42)] ) def test_eval(test_input, expected): assert eval(test_input) == expected 近期在應付學校課業時發現後端認證 token 時有更佳寫法，取自 Day08:08 - User服務(3) - 後端 - JWT token、修改個人資料: import jwt from users.models import User from tools.</description>
-    </item>
-    
-    <item>
       <title>Hello world, Again!</title>
       <link>http://www.example.com/posts/first/</link>
       <pubDate>Sun, 09 Apr 2023 14:55:35 +0800</pubDate>
@@ -84,15 +38,6 @@ Leader: 正常情況集群只有一個 Leader Follower: 非選舉期間，Leader
       <description> Hello world, Again! Link to heading 第三次回歸 blog， 先記錄一下 Hugo 一些語法。
 New post Link to heading $ hugo new posts/first.md Deploy Link to heading generate static page
 $ hugo -D </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>http://www.example.com/posts/k8s/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://www.example.com/posts/k8s/</guid>
-      <description></description>
     </item>
     
   </channel>
