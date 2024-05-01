@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>distributed system on Meow</title>
+    <link>http://www.example.com/tags/distributed-system/</link>
+    <description>Recent content in distributed system on Meow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 24 Apr 2024 15:48:44 +0800</lastBuildDate><atom:link href="http://www.example.com/tags/distributed-system/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dynamo: Amazon&#39;s Highly Available Key-value Store（SOSP 2007）</title>
+      <link>http://www.example.com/posts/distributed-system/dynamo/</link>
+      <pubDate>Wed, 24 Apr 2024 15:48:44 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/distributed-system/dynamo/</guid>
+      <description>abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 設計上的考量 Link to heading 如何解決 conflict 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent always writable 把解決寫入 conflict 的情況在讀取時解決 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案: load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming configuration management Dynamo 論文中只討論了下面的幾項技術 parition: 如何決定資料要存到哪個節點 replication versioning membership failure detection and failure handling scaling system architecture Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partition Link to heading 重點是如何分配資料到特定節點中</description>
+    </item>
+    
+  </channel>
+</rss>

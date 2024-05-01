@@ -8,7 +8,7 @@
     <language>en</language>
     <lastBuildDate>Wed, 24 Apr 2024 15:53:15 +0800</lastBuildDate><atom:link href="http://www.example.com/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title></title>
+      <title>Cassandra</title>
       <link>http://www.example.com/posts/cassandra/</link>
       <pubDate>Wed, 24 Apr 2024 15:53:15 +0800</pubDate>
       
@@ -18,11 +18,11 @@
     
     <item>
       <title>Dynamo: Amazon&#39;s Highly Available Key-value Store（SOSP 2007）</title>
-      <link>http://www.example.com/posts/dynamo/</link>
+      <link>http://www.example.com/posts/distributed-system/dynamo/</link>
       <pubDate>Wed, 24 Apr 2024 15:48:44 +0800</pubDate>
       
-      <guid>http://www.example.com/posts/dynamo/</guid>
-      <description>abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 設計上的考量 Link to heading 如何解決 conflict 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent always writable 把解決寫入 conflict 的情況在讀取時解決 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案: load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming configuration management Dynamo 論文中只討論了下面的幾項技術 parition: 如何決定資料要存到哪個節點 replication versioning membership failure detection and failure handling scaling system architecture Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partition Link to heading 重點是如何分配資料到特定節點中 consistent hashing 已知各個節點經過 hash 後，在 ring 中有各自的位置，而要處理的 data 經過 hash 後會存在環上某位置，以順時鐘方向遇到第一個 index (節點) 就負責處理這筆資料ㄘ partitioning algorithm replication 為達到高可用性與資料的持久性，Dynamo 會將資料複製到 N 個節點上(N 為設定值)</description>
+      <guid>http://www.example.com/posts/distributed-system/dynamo/</guid>
+      <description>abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 設計上的考量 Link to heading 如何解決 conflict 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent always writable 把解決寫入 conflict 的情況在讀取時解決 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案: load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming configuration management Dynamo 論文中只討論了下面的幾項技術 parition: 如何決定資料要存到哪個節點 replication versioning membership failure detection and failure handling scaling system architecture Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partition Link to heading 重點是如何分配資料到特定節點中</description>
     </item>
     
     <item>
@@ -53,7 +53,7 @@ Leader: 正常情況集群只有一個 Leader Follower: 非選舉期間，Leader
       <pubDate>Sun, 21 Jan 2024 16:29:07 +0800</pubDate>
       
       <guid>http://www.example.com/posts/2024/</guid>
-      <description> 2024-01-18 半夜逛了 Twitter 讀了不少人對於 2023 的回顧與 2024 的規劃 https://mp.weixin.qq.com/s?__biz=MjM5NjI4MjM0Mw==&amp;mid=2652166294&amp;idx=1&amp;sn=475bf1b82f7f9943837b67bec399c5cd&amp;chksm=bd0bd21e8a7c5b084b576103690074bebfe1a96cfbdc5d7370ba727782cbbc8001bb2e84fe41&amp;token=241587091&amp;lang=zh_CN#rd https://twitter.com/fkysly/status/1746784846943601028 https://lutaonan.com/blog/say-in-28/ 希望自己花時間把獨立開發週刊閱讀一下 https://www.ezindie.com/weekly 2024-01-21 https://podcasters.spotify.com/pod/show/rusttalk/episodes/009-e2davbk 2024-01-31 可以考慮讀個 https://www.amazon.com/Philosophy-Software-Design-John-Ousterhout/dp/1732102201 https://go7hic.github.io/A-Philosophy-of-Software-Design/#/ https://epubkit.app/blog/paul-graham-2016-2023 2024-03-11 聽到大象體操張凱翔提到他有類似投手失憶症，手指無法正常運作時提到底下的話: 我後來把做音樂這件事情分成幾個層次，你喜歡音樂跟創造音樂是你跟音樂的關係，如果今天沒有觀眾你還會想要做音樂的話，那就是成為藝術家的過程，但是如果我們喜歡音樂是因為我們需要觀眾，我才做做音樂的話，那我就屬於一個專業人士或是一個在音樂產業界工作的人，後來我發現，我需要成為藝術家，這是我自己負的責任。如果有一天我沒辦法辦法表演，例如我的手沒辦法改善或是沒有人聽的話，我還會想要做音樂嗎？我會發現，我會想做音樂，我需要做音樂，我跟觀眾是我跟觀眾的關係，但我跟音樂的關係是我跟音樂的關係 大象體操 at 這又沒有很ㄉ
+      <description> 2024-01-18 半夜逛了 Twitter 讀了不少人對於 2023 的回顧與 2024 的規劃 https://mp.weixin.qq.com/s?__biz=MjM5NjI4MjM0Mw==&amp;mid=2652166294&amp;idx=1&amp;sn=475bf1b82f7f9943837b67bec399c5cd&amp;chksm=bd0bd21e8a7c5b084b576103690074bebfe1a96cfbdc5d7370ba727782cbbc8001bb2e84fe41&amp;token=241587091&amp;lang=zh_CN#rd https://twitter.com/fkysly/status/1746784846943601028 https://lutaonan.com/blog/say-in-28/ 希望自己花時間把獨立開發週刊閱讀一下 https://www.ezindie.com/weekly 2024-01-21 https://podcasters.spotify.com/pod/show/rusttalk/episodes/009-e2davbk 2024-01-31 可以考慮讀個 https://www.amazon.com/Philosophy-Software-Design-John-Ousterhout/dp/1732102201 https://go7hic.github.io/A-Philosophy-of-Software-Design/#/ https://epubkit.app/blog/paul-graham-2016-2023 2024-03-11 我後來把做音樂這件事情分成幾個層次，你喜歡音樂跟創造音樂是你跟音樂的關係，如果今天沒有觀眾你還會想要做音樂的話，那就是成為藝術家的過程，但是如果我們喜歡音樂是因為我們需要觀眾，我才做做音樂的話，那我就屬於一個專業人士或是一個在音樂產業界工作的人，後來我發現，我需要成為藝術家，這是我自己負的責任。如果有一天我沒辦法辦法表演，例如我的手沒辦法改善或是沒有人聽的話，我還會想要做音樂嗎？我會發現，我會想做音樂，我需要做音樂，我跟觀眾是我跟觀眾的關係，但我跟音樂的關係是我跟音樂的關係 大象體操＠這又沒有很ㄉ
 2024-03-17 (日) 今天在公司標記資料，對於邊做這種高重複性的工作最好找個音樂 or podcast，據說這有助於提高生產力 一開始在 代碼之外 听众来信 #8 995 没有自己的时间，如何调整？ 聽到三位主持人推薦 前阿里CEO卫哲：趁年轻去印一张自己人生的股票｜S6E34 硅谷徐老师 </description>
     </item>
     

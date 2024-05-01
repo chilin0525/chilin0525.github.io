@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Dynamo: Amazon&#39;s Highly Available Key-value Store（SOSP 2007） · Meow
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Chilin Chiou">
+<meta name="description" content="abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 設計上的考量 Link to heading 如何解決 conflict 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent always writable 把解決寫入 conflict 的情況在讀取時解決 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案: load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming configuration management Dynamo 論文中只討論了下面的幾項技術 parition: 如何決定資料要存到哪個節點 replication versioning membership failure detection and failure handling scaling system architecture Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partition Link to heading 重點是如何分配資料到特定節點中">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Dynamo: Amazon&#39;s Highly Available Key-value Store（SOSP 2007）"/>
+<meta name="twitter:description" content="abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 設計上的考量 Link to heading 如何解決 conflict 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent always writable 把解決寫入 conflict 的情況在讀取時解決 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案: load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming configuration management Dynamo 論文中只討論了下面的幾項技術 parition: 如何決定資料要存到哪個節點 replication versioning membership failure detection and failure handling scaling system architecture Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partition Link to heading 重點是如何分配資料到特定節點中"/>
+
+<meta property="og:title" content="Dynamo: Amazon&#39;s Highly Available Key-value Store（SOSP 2007）" />
+<meta property="og:description" content="abstract Link to heading 提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 always-on 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。 設計上的考量 Link to heading 如何解決 conflict 特性 Link to heading 非同步複製 犧牲 consistent 換 availbility 保證 eventually consistent always writable 把解決寫入 conflict 的情況在讀取時解決 Syetem Archhitecture Link to heading 提出生產級別的 storage system 要考慮底下任務制定相關解決方案: load balancing membership and failure detection failure recovery replica synchronization overload handling state transfer concurrency and job scheduling request marshalling request routing system monitoring and alarming configuration management Dynamo 論文中只討論了下面的幾項技術 parition: 如何決定資料要存到哪個節點 replication versioning membership failure detection and failure handling scaling system architecture Link to heading Dynamo 對外提供的 interface 有兩個操作: get(key) 根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a context put(key) 根據 key 決定 object 要存在哪個 replica node context: version of the object opaque to the caller partition Link to heading 重點是如何分配資料到特定節點中" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://www.example.com/posts/distributed-system/dynamo/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-04-24T15:48:44+08:00" />
+<meta property="article:modified_time" content="2024-04-24T15:48:44+08:00" />
+
+
+
+
+
+<link rel="canonical" href="http://www.example.com/posts/distributed-system/dynamo/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.65236a6d834b26194eed04a2a3b45e44d9194ef9e620253705d4bef03bd7ef81.css" integrity="sha256-ZSNqbYNLJhlO7QSio7ReRNkZTvnmICU3BdS&#43;8DvX74E=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.f6534b0b446b75d9b6ad77a97d43ede2ddaeff1b6e2361fb7198d6f8fcb7f83f.css" integrity="sha256-9lNLC0Rrddm2rXepfUPt4t2u/xtuI2H7cZjW&#43;Py3&#43;D8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-dark">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Meow
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/contact/">Contact me</a>
+            </li>
+          
+        
+        
+          
+          
+          
+            
+          
+            
+              
+                <li class="navigation-item menu-separator">
+                  <span>|</span>
+                </li>
+                
+              
+              <li class="navigation-item">
+                <a href="/pt-br/">🇧🇷</a>
+              </li>
+            
+          
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://www.example.com/posts/distributed-system/dynamo/">
+              Dynamo: Amazon&#39;s Highly Available Key-value Store（SOSP 2007）
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-04-24T15:48:44&#43;08:00">
+                April 24, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/distributed-system/">distributed system</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/paper/">paper</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h2 id="abstract">
+  abstract
+  <a class="heading-link" href="#abstract">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>提出 Amazon 遇到的最大挑戰是 reliability at massive scale，需要的是 highly available key-value storage，為 core service 提供 <code>always-on</code> 的體驗。為了達到這個目的，選擇犧牲了特殊 failure 下的 consistency，使用 object versioning 與 pplication-assisted conflict resolution 機制。</li>
+</ul>
+<h2 id="設計上的考量">
+  設計上的考量
+  <a class="heading-link" href="#%e8%a8%ad%e8%a8%88%e4%b8%8a%e7%9a%84%e8%80%83%e9%87%8f">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>如何解決 conflict</li>
+</ul>
+<h2 id="特性">
+  特性
+  <a class="heading-link" href="#%e7%89%b9%e6%80%a7">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>非同步複製</li>
+<li>犧牲 consistent 換 availbility</li>
+<li>保證 eventually consistent</li>
+<li>always writable</li>
+<li>把解決寫入 conflict 的情況在讀取時解決</li>
+</ul>
+<h2 id="syetem-archhitecture">
+  Syetem Archhitecture
+  <a class="heading-link" href="#syetem-archhitecture">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>提出生產級別的 storage system 要考慮底下任務制定相關解決方案:
+<ul>
+<li>load balancing</li>
+<li>membership and failure detection</li>
+<li>failure recovery</li>
+<li>replica synchronization</li>
+<li>overload handling</li>
+<li>state transfer</li>
+<li>concurrency and job scheduling</li>
+<li>request marshalling</li>
+<li>request routing</li>
+<li>system monitoring and alarming</li>
+<li>configuration management</li>
+</ul>
+</li>
+<li>Dynamo 論文中只討論了下面的幾項技術
+<ul>
+<li>parition: 如何決定資料要存到哪個節點</li>
+<li>replication</li>
+<li>versioning</li>
+<li>membership</li>
+<li>failure detection and failure handling</li>
+<li>scaling</li>
+</ul>
+</li>
+</ul>
+<h3 id="system-architecture">
+  system architecture
+  <a class="heading-link" href="#system-architecture">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<ul>
+<li>Dynamo 對外提供的 interface 有兩個操作:
+<ul>
+<li><code>get(key)</code>
+<ul>
+<li>根據 key 到所有 replica node 上搜尋，返回 single object；當發生版本衝突的情況，則是回傳 list of objects witi a <code>context</code></li>
+</ul>
+</li>
+<li><code>put(key)</code>
+<ul>
+<li>根據 key 決定 object 要存在哪個 replica node</li>
+</ul>
+</li>
+<li>context:
+<ul>
+<li>version of the object</li>
+<li>opaque to the caller</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="partition">
+  partition
+  <a class="heading-link" href="#partition">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>
+<p>重點是如何分配資料到特定節點中</p>
+</li>
+<li>
+<p>consistent hashing</p>
+<ul>
+<li>已知各個節點經過 hash 後，在 ring 中有各自的位置，而要處理的 data 經過 hash 後會存在環上某位置，以順時鐘方向遇到第一個 index (或稱 token, 表節點) 就負責處理這筆資料
+<ul>
+<li>這個節點在 Dynamo 中稱為 <code>coordinator</code></li>
+</ul>
+</li>
+<li>Skew: 然而實際上可能因為分配不均勻，導致節點負載過重或是使某些 key 映射到同一個節點的機率增加，例如一個系統內只有兩個節點，映射到 ring 後還很接近彼此的話，其中一個將會負擔近乎整個系統的 loading</li>
+<li>virtual node: 未解決 loading 不平衡的情況，Dynamo 採用 virtual node 個概念，將一台物理節點分配到環上的多個位置 (token)</li>
+<li>優缺點
+<ul>
+<li>優點:
+<ul>
+<li>負載平衡，避免在新增或刪除節點後，有節點 loading 過重</li>
+<li>同樣是負載平衡，如果有硬體資訊較好或較差，可以透過虛擬節點的數量去調整物理節點的 loading</li>
+</ul>
+</li>
+<li>缺點:
+<ul>
+<li>新增 or 插入節點時，會需要額外的 effort</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/Dynamo/replication.png" alt=""></p>
+</li>
+</ul>
+<h2 id="replication">
+  replication
+  <a class="heading-link" href="#replication">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>為達到高可用性與資料的持久性，Dynamo 會將資料複製到 N 個節點上(N 為設定值)</li>
+<li>對於每個 key，會被分配到一個節點稱為 coordinator，除了 coordinator 外，還會存在順時間方向 N-1 個節點上</li>
+<li>底下為範例，假設 N=3，落在 AB 範圍的 key 會順時針方向找到第一個比她大的節點，以此範例就是 B 節點，B 會負責將資料複製到 C 與 D</li>
+<li>負責儲存特定 key 的節點稱為 perference list，然而因為環上存在虛擬節點，實際 perference list 內物理節點可能少於 N 個，因此 perference list 在選擇節點時會特地跳過一些位置，保證資料存在不同的物理節點上面</li>
+</ul>
+<h2 id="conflict">
+  conflict
+  <a class="heading-link" href="#conflict">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>寫入衝突:
+<ul>
+<li>因為 Dynamo 採取 asnyc 複製資料的方法，如同分散式系統中常見的寫入情況，如果 Dynamo <code>put(key)</code> 完成了一筆資料的新增，很有可能尚未複製到所有 replicae node 上，此時送出 <code>get(key)</code> 操作很有可能拿不到最新數據</li>
+</ul>
+</li>
+<li>解決衝突
+<ul>
+<li>案例
+<ol>
+<li>Client 在 Sx 中寫入</li>
+<li>Client 想要更新剛剛寫入的 object，假設仍然是 Sx 負責處理這個 request，因此 vector clock 從 <code>[Sx, 1]</code> 更新到 <code>[Sx, 2]</code>，注意，此時不一定可以在其他 replica node 看到此次的更新</li>
+<li></li>
+</ol>
+</li>
+</ul>
+</li>
+<li>TODO: version vector vs. vector clock</li>
+</ul>
+<h2 id="membership-and-fault-detection">
+  membership and fault detection
+  <a class="heading-link" href="#membership-and-fault-detection">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>節點因故障或是定義維護導致暫時不可用，不代表該節點離開系統，因此不能隨意做 rebalance</li>
+<li>使用 explicit mechanism 向 ring 增加或刪除節點，User 可以透過 CLI or Web 連進某個 Node 下新增或刪除的命令，負責的節點會將節點變動時間持久化</li>
+<li>Gossip-based algorithm to propagate 成員變動的訊息</li>
+<li>過程
+<ul>
+<li>Init: 先選擇 a set of tokens (virtual nodes in the consistent hash space)，並將物理節點映射到這些 token。物理節點與 token set 映射的關係會持久化到 Disk，因此在初始時只會知道自己映射到哪些 token。</li>
+<li>利用 Gossip protocol 最後每個節點都能知道其他節點對應的 token set</li>
+</ul>
+</li>
+<li>缺陷: 可能在多個節點加入的初期形成 logical partition，例如 User 先將節點 A 加入 ring 後，又新增了節點 B，但此時 A 與 B 都還不知道彼此的存在。解決方法是透過 external mechanism 預先設定種子節點，在初始化後就可以先知道比次存在。</li>
+<li>節點的新增與移除:</li>
+</ul>
+<h2 id="fault-detection">
+  fault detection
+  <a class="heading-link" href="#fault-detection">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>
+<p>採用 pure local notion: 只要 replica node B 沒有回應 replica node A 的節點的話，對 A 節點而言 B 此時的狀態就是故障狀態。雖然</p>
+</li>
+<li>
+<p>底下的案例是新增了 X 節點到 Ａ 與 B 之間，假設這個系統 N=3 的話，新節點要負責處理 <code>(F, G)</code>, <code>(G, A]</code> 與 <code>(A, x]</code> 的 key，因此原先皆在 A 後面的 B, C, D 節點要將原先負責的 key 轉移到 X 身上；反之，如果刪除節點的話，順序相反過來。</p>
+<p><img src="/images/Dynamo/replica_membership.png" alt=""></p>
+</li>
+</ul>
+<h2 id="summary">
+  summary
+  <a class="heading-link" href="#summary">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>從 Dynamo 的論文中大致可以發現工程上改善了一些理論的問題點:
+<ul>
+<li>parition</li>
+<li>vector clock -&gt;</li>
+<li>Quorum -&gt; Sloppy Quorum</li>
+</ul>
+</li>
+</ul>
+<h2 id="reference">
+  reference
+  <a class="heading-link" href="#reference">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li><a href="https://arthurchiao.art/blog/amazon-dynamo-zh/"  class="external-link" target="_blank" rel="noopener">[译] [论文] Dynamo: Amazon&rsquo;s Highly Available Key-value Store（SOSP 2007</a></li>
+<li><a href="https://ithelp.ithome.com.tw/articles/10217619"  class="external-link" target="_blank" rel="noopener">Day 4 - DynamoDB設計裡Consistency與Availability的爭奪 - Quorum System(上)</a></li>
+</ul>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2023 -
+    
+    2024
+     Chilin Chiou 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  <script data-goatcounter="https://code.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
