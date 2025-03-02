@@ -6,7 +6,54 @@
     <description>Recent content on Meow</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 24 Apr 2024 15:48:44 +0800</lastBuildDate><atom:link href="http://www.example.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 02 Mar 2025 13:58:53 +0800</lastBuildDate><atom:link href="http://www.example.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>http://www.example.com/posts/open-source/pandas/how_pandas_store_data/</link>
+      <pubDate>Sun, 02 Mar 2025 13:58:53 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/open-source/pandas/how_pandas_store_data/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>2022&#43;2023 Review</title>
+      <link>http://www.example.com/posts/personal/2023_review/</link>
+      <pubDate>Thu, 03 Oct 2024 15:35:25 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/personal/2023_review/</guid>
+      <description>工作心得 Link to heading 關於熱情: 嘗試接觸弱連結: 別埋首於工作 閱讀: 也許是主管常常提出一些過於抽象但很值得且應該思考的非工程問題，我覺得我缺乏一種思考此類問題的模型，且有時還是覺得自己的視野不夠高，然後常常最後跟同事討論時會提到如果是別家公司會怎麼做等等的問題，這些問題我思考後有時候會覺得是因為缺乏經驗，可是常常也覺得我們的問題跟別人不一定相同，就算相同資源與情境也可能不同，為什麼要選擇參考別人的做法？所以我得出的結論是，經驗也許無法複製，但也可以透過別人的 case 練習思考此類問題並擴大視野，讀書與 podcast 是我得出的方法。 復盤: 嘗試週六休息: Done is better than perfect: 招募夥伴 Link to heading 大概去年開始為團隊進行面試，看了不少履歷也實際面試一些人，但實際能滿足團隊期待的人並不多，底下是我自己在看履歷或是面試時會注重的一些特質
+好奇心: 對於未知或是特定事物有強烈的好奇心，我認為在困難的事情中，好奇心是一項能讓人持續願意投入的關鍵，因為好奇所以才願意主動投入時間研究與實驗 勇於冒險: 過去兩三年中，其實我覺得我們團隊在許多新技術/體制中幾乎都是第一次碰觸，因此對於不確定的承擔能力相當重要，如果往往過去依賴他人告知要做什麼/怎麼做，往往會造成預期的管理成本的上升，然而預期的是對於碰觸此類高度不確定性的事物，個人認爲所有的不安、沮喪、徬徨都是預期內會發生的情緒，因此造就下一項團隊合作的重要性，如果一個人想不出完美的解法，也許可以先有個 60 分經過討論後再變成 80 分。 團隊合作: 我想許多公司都會把團隊合作視為重要的特質，我也認為團隊合作重要，一個人難以成大事，但一群人也許就會有機會，在團隊合作中我在意的特質還可往下區分: 對於其他人工作感到好奇: 主動詢問與好奇非自己負責但與自己相關的工作 提早告知可能存在的風險 善於計畫 做過什麼困難的事情: 老實說我其實不太在意學歷，出於過去自身經驗，甚至我認為一個優秀的人不應該花過多的時間在學歷上是很合理的事情，因為這只會阻礙他做大事的節奏，但我會好奇過去做個什麼困難或是有意義的事情，為什麼要做跟做這件事情的價值是很重要的。 不擇手短 覺得很棒的書 Link to heading 如同上面提到，2024 年開始我開始在意閱讀這件事情，分享一些我覺得很棒的書籍:
+心態致勝 podcase: *</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://www.example.com/posts/borg/</link>
+      <pubDate>Tue, 07 May 2024 23:03:50 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/borg/</guid>
+      <description> archtecture Link to heading Borgmaster main Borgmaster process 作用 handle client RPCs (metate state, provide read-only access) manages state machines for all of the objects in the system communicate with Borglet ＊ replicated 5 次 in memory state of cells 通過 Paxos 選出 Leader 利用 snapshot 存擋，用來恢復狀態 scheduler 當 job submet 後，borgmaster 會將這個 job 先存到 paxos store，然後將 job 中的 tasks 加入 pending queue scheduler 會定期掃 pending queue，按照 priority 由高到低挑選 job (如果同 priority，採取 round-robin) Feasibility checking: 尋找符合 job 要求的機器 scoring algorithm: 挑選合適的機器，如果被選中的機器沒有 job 所 request 的資源，borgmaster 會從 low priority 的 job 進行驅逐清洗出足夠的資源，被驅逐的 job 會再次回到 pending queue 中 具體的方法 borg 解釋不夠清楚 Borglet 每台機器上 borg agent start and stop tasks restart if task fail ＊borgmaster elected master 每隔幾秒會輪詢每個 borglet 取得當前機器狀態，並根據 response 更新 cell 的狀態 為了 scalability，每個 borgmaster replic 會跑 stateless link shard 去和 borglet 溝通 如果一個 borglet 多次的輪詢後都沒有回應，標記為 down，上面的所有 task 會被 reshedule。如果 borgmaster 與其的溝通恢復了，為了避免複製的成本，borgmaster 會直接通知 borglet kill 跑在上面的 task，反正這些人已經被 reshedule 了 Scalability &amp;hellip; Lesson Learn Link to heading </description>
+    </item>
+    
+    <item>
+      <title>Bigtable: A Distributed Storage System for Structured Data (2006)</title>
+      <link>http://www.example.com/posts/distributed-system/bigtable/</link>
+      <pubDate>Thu, 02 May 2024 01:16:53 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/distributed-system/bigtable/</guid>
+      <description>background Link to heading 注意時空背景是 2006 distributed storage system for managing structured data goals wide applicability scalability high performance high availability In many ways, Bigtable resembles a database shares many implementation strategies with databases. Paral- lel databases main-memory databases 但 Big Table 提供與上述系統不同的 interface does not support a full relational data model; instead, it provides clients with a simple data model upports dynamic control over data layout and format allows clients to reason about the locality properties of the data represented in the underlying storage indexed using row and column names that can be arbitrary strings.</description>
+    </item>
+    
+    <item>
+      <title>Cassandra</title>
+      <link>http://www.example.com/posts/cassandra/</link>
+      <pubDate>Wed, 24 Apr 2024 15:53:15 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/cassandra/</guid>
+      <description>reference Link to heading https://tachunwu.github.io/posts/discord-cassandra/</description>
+    </item>
+    
     <item>
       <title>Dynamo: Amazon&#39;s Highly Available Key-value Store（SOSP 2007）</title>
       <link>http://www.example.com/posts/distributed-system/dynamo/</link>
@@ -30,6 +77,34 @@ Leader: 正常情況集群只有一個 Leader Follower: 非選舉期間，Leader
     </item>
     
     <item>
+      <title>ChangeFormer</title>
+      <link>http://www.example.com/posts/changeformer/</link>
+      <pubDate>Wed, 31 Jan 2024 23:35:33 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/changeformer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://www.example.com/posts/2024/</link>
+      <pubDate>Sun, 21 Jan 2024 16:29:07 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/2024/</guid>
+      <description>2024-01-18 半夜逛了 Twitter 讀了不少人對於 2023 的回顧與 2024 的規劃 https://mp.weixin.qq.com/s?__biz=MjM5NjI4MjM0Mw==&amp;mid=2652166294&amp;idx=1&amp;sn=475bf1b82f7f9943837b67bec399c5cd&amp;chksm=bd0bd21e8a7c5b084b576103690074bebfe1a96cfbdc5d7370ba727782cbbc8001bb2e84fe41&amp;token=241587091&amp;lang=zh_CN#rd https://twitter.com/fkysly/status/1746784846943601028 https://lutaonan.com/blog/say-in-28/ 希望自己花時間把獨立開發週刊閱讀一下 https://www.ezindie.com/weekly 2024-01-21 https://podcasters.spotify.com/pod/show/rusttalk/episodes/009-e2davbk 2024-01-31 可以考慮讀個 https://www.amazon.com/Philosophy-Software-Design-John-Ousterhout/dp/1732102201 https://go7hic.github.io/A-Philosophy-of-Software-Design/#/ https://epubkit.app/blog/paul-graham-2016-2023 2024-03-11 我後來把做音樂這件事情分成幾個層次，你喜歡音樂跟創造音樂是你跟音樂的關係，如果今天沒有觀眾你還會想要做音樂的話，那就是成為藝術家的過程，但是如果我們喜歡音樂是因為我們需要觀眾，我才做做音樂的話，那我就屬於一個專業人士或是一個在音樂產業界工作的人，後來我發現，我需要成為藝術家，這是我自己負的責任。如果有一天我沒辦法辦法表演，例如我的手沒辦法改善或是沒有人聽的話，我還會想要做音樂嗎？我會發現，我會想做音樂，我需要做音樂，我跟觀眾是我跟觀眾的關係，但我跟音樂的關係是我跟音樂的關係 大象體操＠這又沒有很ㄉ
+2024-03-17 (日) 今天在公司標記資料，對於邊做這種高重複性的工作最好找個音樂 or podcast，據說這有助於提高生產力 一開始在 代碼之外 听众来信 #8 995 没有自己的时间，如何调整？ 聽到三位主持人推薦 前阿里CEO卫哲：趁年轻去印一张自己人生的股票｜S6E34 硅谷徐老师 2024-05-08 https://flipermag.com/2013/07/06/why-work-at-twitter/ 這些計畫的實驗本質對我影響很深，這些想法並沒有寫成白紙黑字，教會我不靠具體的計畫做事。如果你用一種挖掘真理的態度處理問題，而不是心裡存有定見，通常會有更棒的結果</description>
+    </item>
+    
+    <item>
+      <title>Python Decorator</title>
+      <link>http://www.example.com/posts/python_decorator/</link>
+      <pubDate>Sun, 21 Jan 2024 14:05:37 +0800</pubDate>
+      
+      <guid>http://www.example.com/posts/python_decorator/</guid>
+      <description>簡介 Link to heading 根據 PEP3181，Python 中的 Decorator 與 GOF 中的 Decorator 不同 起源 Link to heading 過去常使用到 python 中的 @，但似乎沒深入了解過 how it works 常在 pytest 傳入多筆 testcase，底下範例取自 Parametrizing fixtures and test functions: import pytest @pytest.mark.parametrize( &amp;#34;test_input,expected&amp;#34;, [(&amp;#34;3+5&amp;#34;, 8), (&amp;#34;2+4&amp;#34;, 6), (&amp;#34;6*9&amp;#34;, 42)] ) def test_eval(test_input, expected): assert eval(test_input) == expected 近期在應付學校課業時發現後端認證 token 時有更佳寫法，取自 Day08:08 - User服務(3) - 後端 - JWT token、修改個人資料: import jwt from users.models import User from tools.</description>
+    </item>
+    
+    <item>
       <title>Hello world, Again!</title>
       <link>http://www.example.com/posts/first/</link>
       <pubDate>Sun, 09 Apr 2023 14:55:35 +0800</pubDate>
@@ -46,7 +121,8 @@ $ hugo -D </description>
       <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>http://www.example.com/about/</guid>
-      <description>喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵 喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵 喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵 喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵 喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵</description>
+      <description>Hi, I&amp;rsquo;m ChiLin Chiu. You can call me ChiLin. ^^
+I&amp;rsquo;m a senior AI software engineer. Building AI service and products from scratch, including data collect, data clearning, model building, system design and development, and deployment. Mainly focus on Smart Factory domain. Familar with Python, learning Rust. Believe software change the world and bring convenience to life. Fans of Elon Musk, work hard like hell, spend more 3500 hours on work.</description>
     </item>
     
     <item>
